@@ -1,41 +1,41 @@
 import React from 'react';
+import { ChakraProvider } from '@chakra-ui/react';
+
 import {
-  ChakraProvider,
-  Box,
-  Text,
-  Link,
-  VStack,
-  Code,
-  Grid,
-  theme,
-} from '@chakra-ui/react';
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from 'react-router-dom';
+import LoginPage from './components/LoginPage';
+import theme from './utilities/theme';
+import ForgotPasswordPage from './components/ForgotPasswordPage';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
-import { Logo } from './Logo';
+import { Provider } from 'react-redux';
+import store from './redux/store';
+import Dashboard from './components/Dashboard';
 
 function App() {
   return (
-    <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <VStack spacing={8}>
-            <Logo h="40vmin" pointerEvents="none" />
-            <Text>
-              Edit <Code fontSize="xl">src/App.js</Code> and save to reload.
-            </Text>
-            <Link
-              color="teal.500"
-              href="https://chakra-ui.com"
-              fontSize="2xl"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learn Chakra
-            </Link>
-          </VStack>
-        </Grid>
-      </Box>
-    </ChakraProvider>
+    <Provider store={store}>
+      <ChakraProvider theme={theme}>
+        {/* <ColorModeSwitcher justifySelf="flex-end" /> */}
+
+        <Router>
+          <Switch>
+            <Route path="/" exact>
+              <Dashboard />
+            </Route>
+            <Route path="/login">
+              <LoginPage />
+            </Route>
+            <Route path="/forgot-password">
+              <ForgotPasswordPage />
+            </Route>
+          </Switch>
+        </Router>
+      </ChakraProvider>
+    </Provider>
   );
 }
 
