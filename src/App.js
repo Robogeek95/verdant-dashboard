@@ -5,12 +5,10 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Redirect,
 } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import theme from './utilities/theme';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
-import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 import Dashboard from './components/Dashboard';
