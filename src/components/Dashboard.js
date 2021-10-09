@@ -1,5 +1,5 @@
 import { Button } from '@chakra-ui/button';
-import { Box, Center, Stack, Text } from '@chakra-ui/layout';
+import { Center, Stack, Text } from '@chakra-ui/layout';
 import { useToast } from '@chakra-ui/toast';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
