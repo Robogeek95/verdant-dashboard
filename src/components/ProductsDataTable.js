@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import { Button, IconButton } from '@chakra-ui/button';
-import { FiCheckCircle, FiMenu, FiMinus, FiMoreVertical, FiPlus } from 'react-icons/fi';
+import { FiCheckCircle, FiMinus, FiMoreVertical, FiPlus } from 'react-icons/fi';
 
 import { Text, Box, Flex, Image } from '@chakra-ui/react';
 import { Divider } from '@chakra-ui/react';
@@ -39,8 +39,6 @@ import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
@@ -212,7 +210,7 @@ export default function ProductsDataTable({ data }) {
               <Flex justifyContent="space-between">
                 <Text>OrderId</Text>
 
-                <Text>qwqw</Text>
+                <Text>212242sss2345</Text>
               </Flex>
               <Box mt={3}>
                 <Text fontWeight="bold">Labels</Text>
