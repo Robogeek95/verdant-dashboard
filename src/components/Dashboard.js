@@ -9,7 +9,7 @@ export default function Dashboard() {
     <Box>
       <DashboardLayout>
         <Switch>
-          <Route path="/">
+          <Route path="/" exact>
             <Redirect
               to={{
                 pathname: '/dashboard',
