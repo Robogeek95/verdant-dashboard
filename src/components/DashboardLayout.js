@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   IconButton,
   Avatar,
@@ -37,6 +37,8 @@ import {
   FiLogOut,
   FiSearch,
 } from 'react-icons/fi';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router';
 
 const LinkItems = {
   top: [
@@ -48,12 +50,23 @@ const LinkItems = {
   ],
   bottom: [{ name: 'Logout', icon: FiLogOut }],
 };
+
 export default function DashboardLayout({ children }) {
+  const [active, setActive] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const userLogin = useSelector(state => state.login);
+  const { userInfo } = userLogin;
+  const location = useLocation();
+
+  useEffect(() => {
+    setActive(location.pathname.split('/')[1]);
+  }, [location.pathname]);
+
   return (
     <Box minH="100vh" bg={useColorModeValue('gray.100', 'gray.900')}>
       <SidebarContent
         onClose={() => onClose}
+        active={active}
         display={{ base: 'none', md: 'block' }}
       />
       <Drawer
@@ -65,12 +78,16 @@ export default function DashboardLayout({ children }) {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent onClose={onClose} />
+          <SidebarContent
+            active={active}
+            user={userInfo?.user}
+            onClose={onClose}
+          />
         </DrawerContent>
       </Drawer>
 
       {/* mobilenav */}
-      <MobileNav onOpen={onOpen} />
+      <MobileNav onOpen={onOpen} user={userInfo?.user} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>
@@ -78,7 +95,7 @@ export default function DashboardLayout({ children }) {
   );
 }
 
-const SidebarContent = ({ onClose, ...rest }) => {
+const SidebarContent = ({ active, onClose, ...rest }) => {
   return (
     <Box
       transition="3s ease"
@@ -108,6 +125,7 @@ const SidebarContent = ({ onClose, ...rest }) => {
             <NavItem
               key={link.name}
               icon={link.icon}
+              active={link.name.toLowerCase() === active.toLowerCase()}
               href={`/${link.name.toLowerCase()}`}
             >
               {link.name}
@@ -127,13 +145,15 @@ const SidebarContent = ({ onClose, ...rest }) => {
   );
 };
 
-const NavItem = ({ icon, href, children, ...rest }) => {
+const NavItem = ({ active, icon, href, children, ...rest }) => {
   return (
     <Link href={href} style={{ textDecoration: 'none' }}>
       <Flex
         align="center"
         p="4"
         ml="4"
+        bg={active ? 'gray.200' : ''}
+        color={active ? 'brand.primary' : ''}
         borderLeftRadius="3xl"
         role="group"
         cursor="pointer"
@@ -159,7 +179,7 @@ const NavItem = ({ icon, href, children, ...rest }) => {
   );
 };
 
-const MobileNav = ({ onOpen, ...rest }) => {
+const MobileNav = ({ user, onOpen, ...rest }) => {
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -227,9 +247,9 @@ const MobileNav = ({ onOpen, ...rest }) => {
                   spacing="1px"
                   ml="2"
                 >
-                  <Text fontSize="sm">Justina Clark</Text>
+                  <Text fontSize="sm">{user?.name}</Text>
                   <Text fontSize="xs" color="gray.600">
-                    Admin
+                    Administrator
                   </Text>
                 </VStack>
               </HStack>
