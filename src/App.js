@@ -5,11 +5,12 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
+  Redirect,
 } from 'react-router-dom';
 import LoginPage from './components/LoginPage';
 import theme from './utilities/theme';
 import ForgotPasswordPage from './components/ForgotPasswordPage';
-import { Provider } from 'react-redux';
+import { Provider, useSelector } from 'react-redux';
 import store from './redux/store';
 import Dashboard from './components/Dashboard';
 
@@ -21,19 +22,42 @@ function App() {
 
         <Router>
           <Switch>
-            <Route path="/" exact>
-              <Dashboard />
-            </Route>
             <Route path="/login">
               <LoginPage />
             </Route>
             <Route path="/forgot-password">
               <ForgotPasswordPage />
             </Route>
+            <PrivateRoute path="/">
+              <Dashboard />
+            </PrivateRoute>
           </Switch>
         </Router>
       </ChakraProvider>
     </Provider>
+  );
+}
+
+function PrivateRoute({ children, ...rest }) {
+  const userLogin = useSelector(state => state.login);
+  const { userInfo } = userLogin;
+
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        userInfo ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
   );
 }
 
