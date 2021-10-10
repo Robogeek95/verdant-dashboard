@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/layout';
 import React from 'react';
-import { Route, Switch } from 'react-router';
+import { Redirect, Route, Switch } from 'react-router';
 import BaseDashBoard from './BaseDashBoard';
 import DashboardLayout from './DashboardLayout';
 
@@ -9,6 +9,14 @@ export default function Dashboard() {
     <Box>
       <DashboardLayout>
         <Switch>
+          <Route path="/">
+            <Redirect
+              to={{
+                pathname: '/dashboard',
+              }}
+            />
+          </Route>
+
           <Route path="/dashboard">
             <BaseDashBoard />
           </Route>

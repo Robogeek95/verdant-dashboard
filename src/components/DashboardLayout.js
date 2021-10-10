@@ -37,8 +37,9 @@ import {
   FiLogOut,
   FiSearch,
 } from 'react-icons/fi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation } from 'react-router';
+import { logout } from '../redux/actions/authActions';
 
 const LinkItems = {
   top: [
@@ -135,7 +136,7 @@ const SidebarContent = ({ active, onClose, ...rest }) => {
 
         <GridItem>
           {LinkItems.bottom.map(link => (
-            <NavItem key={link.name} icon={link.icon}>
+            <NavItem key={link.name} name={link.name} icon={link.icon}>
               {link.name}
             </NavItem>
           ))}
@@ -145,9 +146,18 @@ const SidebarContent = ({ active, onClose, ...rest }) => {
   );
 };
 
-const NavItem = ({ active, icon, href, children, ...rest }) => {
+const NavItem = ({ active, icon, href, name, children, ...rest }) => {
+  const dispatch = useDispatch();
+  function handleLogout() {
+    dispatch(logout());
+  }
+
   return (
-    <Link href={href} style={{ textDecoration: 'none' }}>
+    <Link
+      href={href}
+      onClick={name?.toLowerCase() === 'logout' ? handleLogout : null}
+      style={{ textDecoration: 'none' }}
+    >
       <Flex
         align="center"
         p="4"
@@ -180,6 +190,11 @@ const NavItem = ({ active, icon, href, children, ...rest }) => {
 };
 
 const MobileNav = ({ user, onOpen, ...rest }) => {
+  const dispatch = useDispatch();
+  function handleLogout() {
+    dispatch(logout());
+  }
+
   return (
     <Flex
       ml={{ base: 0, md: 60 }}
@@ -256,7 +271,7 @@ const MobileNav = ({ user, onOpen, ...rest }) => {
               <MenuItem>Profile</MenuItem>
               <MenuItem>Settings</MenuItem>
               <MenuDivider />
-              <MenuItem>Sign out</MenuItem>
+              <MenuItem onClick={handleLogout}>Logout</MenuItem>
             </MenuList>
           </Menu>
         </Flex>

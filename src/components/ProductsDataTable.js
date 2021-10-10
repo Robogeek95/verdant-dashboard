@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import { Button, IconButton } from '@chakra-ui/button';
-import { FiCheckCircle, FiMenu, FiMinus, FiPlus } from 'react-icons/fi';
+import { FiCheckCircle, FiMenu, FiMinus, FiMoreVertical, FiPlus } from 'react-icons/fi';
 
 import { Text, Box, Flex, Image } from '@chakra-ui/react';
 import { Divider } from '@chakra-ui/react';
@@ -130,7 +130,7 @@ export default function ProductsDataTable({ data }) {
               <Td>
                 <Popover w="150px">
                   <PopoverTrigger>
-                    <IconButton variant="ghost" icon={<FiMenu />} />
+                    <IconButton variant="ghost" icon={<FiMoreVertical />} />
                   </PopoverTrigger>
                   <Portal>
                     <PopoverContent>
