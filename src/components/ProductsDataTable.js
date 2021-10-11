@@ -46,23 +46,35 @@ import {
 export default function ProductsDataTable({ data }) {
   // alert dialog
   const [isOpen, setIsOpen] = useState(false);
-  const onClose = () => setIsOpen(false);
+  const onClose = () => {
+    setActiveOrder({});
+    setIsOpen(false);
+  };
+
   const cancelRef = useRef();
 
-  function handleRemove() {
+  function handleRemove(order) {
+    setActiveOrder(order);
     setIsOpen(true);
   }
 
   function handleOnSelectRemove() {
+    // close the dialog
     onClose();
+
+    // proceed to delete the order
     handleDelete();
   }
 
   // product drawer
   const [isProductOpen, setIsProductOpen] = useState(false);
-  const onCloseProduct = () => setIsProductOpen(false);
+  const onCloseProduct = () => {
+    setActiveOrder({});
+    setIsProductOpen(false);
+  };
 
-  function handleView() {
+  function handleView(order) {
+    setActiveOrder(order);
     setIsProductOpen(true);
   }
 
@@ -72,6 +84,8 @@ export default function ProductsDataTable({ data }) {
   function handleToggleLabel() {
     setIsLabelOpen(!isLabelOpen);
   }
+
+  const [activeOrder, setActiveOrder] = useState({});
 
   function formatStateBtn(state) {
     if (state === 'delivered') {
@@ -101,7 +115,11 @@ export default function ProductsDataTable({ data }) {
   const onCloseDeleteProduct = () => setIsDeletedOpen(false);
 
   function handleDelete() {
+    // notify that delete is successful
     setIsDeletedOpen(true);
+
+    // unset active order
+    setActiveOrder({});
   }
 
   return (
@@ -135,14 +153,14 @@ export default function ProductsDataTable({ data }) {
                       <PopoverBody>
                         <Stack gap={3}>
                           <Button
-                            onClick={handleView}
+                            onClick={() => handleView(order)}
                             colorScheme="blue"
                             variant="ghost"
                           >
                             View
                           </Button>
                           <Button
-                            onClick={handleRemove}
+                            onClick={() => handleRemove(order)}
                             colorScheme="red"
                             variant="ghost"
                           >
@@ -167,7 +185,7 @@ export default function ProductsDataTable({ data }) {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Remove Order from List?
+              Remove {activeOrder.name} from List?
             </AlertDialogHeader>
 
             <AlertDialogBody>
@@ -210,7 +228,7 @@ export default function ProductsDataTable({ data }) {
               <Flex justifyContent="space-between">
                 <Text>OrderId</Text>
 
-                <Text>212242sss2345</Text>
+                <Text>{activeOrder.id}</Text>
               </Flex>
               <Box mt={3}>
                 <Text fontWeight="bold">Labels</Text>
@@ -261,29 +279,43 @@ export default function ProductsDataTable({ data }) {
                   alignItems="center"
                 >
                   <Flex gridGap="5" alignItems="center">
-                    <Image src="/product.png" h="70px" />
-                    <Text>Product name</Text>
+                    <Image
+                      src={activeOrder.image}
+                      h="70px"
+                      alt={activeOrder.name}
+                    />
+                    <Text>{activeOrder.name}</Text>
                   </Flex>
-                  <Text>N1000</Text>
+                  <Text>₦{activeOrder.amount}</Text>
                 </Flex>
               </Box>
 
               <Divider my={5} />
               <Flex justifyContent="space-between">
-                <Text>Sum Total:</Text>
-                <Text>N 3,000</Text>
+                <Text>Quantity:</Text>
+                <Text>{activeOrder.quantity}</Text>
+              </Flex>
+
+              <Divider my={5} />
+              <Flex justifyContent="space-between">
+                <Text>Sum total:</Text>
+                <Text>₦{activeOrder.quantity * activeOrder.amount}</Text>
               </Flex>
 
               <Divider my={5} />
               <Flex justifyContent="space-between">
                 <Text>Delivery:</Text>
-                <Text>N 3,000</Text>
+                <Text>₦{activeOrder.delivery || 0}</Text>
               </Flex>
 
               <Divider my={5} />
               <Flex justifyContent="space-between">
                 <Text>TOTAL:</Text>
-                <Text>N 3,000</Text>
+                <Text>
+                  ₦
+                  {activeOrder.quantity * activeOrder.amount +
+                    (activeOrder.delivery || 0)}
+                </Text>
               </Flex>
 
               <Box></Box>
