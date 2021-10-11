@@ -91,7 +91,7 @@ export default function BaseDashBoard() {
       </Flex>
 
       <Grid
-        templateColumns="repeat(4, 1fr)"
+        templateColumns={['repeat(2, 1fr)', null, 'repeat(4, 1fr)']}
         mt={5}
         borderRadius="lg"
         bg="white"
@@ -103,7 +103,7 @@ export default function BaseDashBoard() {
         {!loading && ordersData && ordersData.length > 0 ? (
           <>
             <Flex
-              borderRight="1px solid"
+              borderRight={[0, null, '1px solid']}
               borderColor="blue.300"
               alignItems="center"
               gridGap="5"
@@ -141,7 +141,7 @@ export default function BaseDashBoard() {
         )}
 
         <Flex
-          borderRight="1px solid"
+          borderRight={[0, null, '1px solid']}
           borderColor="blue.300"
           alignItems="center"
           gridGap="5"
@@ -167,7 +167,7 @@ export default function BaseDashBoard() {
         </Flex>
 
         <Flex
-          borderRight="1px solid"
+          borderRight={[0, null, '1px solid']}
           borderColor="blue.300"
           alignItems="center"
           gridGap="5"
@@ -215,7 +215,7 @@ export default function BaseDashBoard() {
       </Grid>
 
       <Grid
-        templateColumns="repeat(2, 1fr)"
+        templateColumns={['1fr', null, 'repeat(2, 1fr)']}
         mt={5}
         borderRadius="lg"
         gridGap="10"
@@ -223,7 +223,7 @@ export default function BaseDashBoard() {
         <Box
           bg="white"
           boxShadow="md"
-          px={'32px'}
+          px={["10px", null, '32px']}
           py={'20px'}
           borderRadius="lg"
         >
@@ -333,7 +333,7 @@ export default function BaseDashBoard() {
           </Button>
         </Flex>
 
-        <Box mt="5">
+        <Box mt="5" overflow="auto">
           {!loading && ordersData && ordersData.length >= 0 ? (
             <ProductsDataTable data={ordersData?.slice(0, 7)} />
           ) : (
