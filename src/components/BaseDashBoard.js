@@ -49,6 +49,7 @@ export default function BaseDashBoard() {
 
   useEffect(() => {
     getProducts();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function getProducts() {
