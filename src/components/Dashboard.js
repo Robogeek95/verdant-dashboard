@@ -1,10 +1,9 @@
 import { Box } from '@chakra-ui/layout';
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
-import { getOrders } from '../redux/actions/ordersActions';
 import BaseDashBoard from './BaseDashBoard';
 import DashboardLayout from './DashboardLayout';
+import UsersDashboard from './UsersDashboard';
 
 export default function Dashboard() {
   return (
@@ -23,7 +22,9 @@ export default function Dashboard() {
             <BaseDashBoard />
           </Route>
 
-          <Route path="/users">users</Route>
+          <Route path="/users">
+            <UsersDashboard />
+          </Route>
 
           <Route path="/products">products</Route>
 
