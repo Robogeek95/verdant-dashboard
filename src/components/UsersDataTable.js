@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import { Button, IconButton } from '@chakra-ui/button';
 import { FiCheckCircle, FiMinus, FiMoreVertical, FiPlus } from 'react-icons/fi';
@@ -24,15 +24,6 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
-} from '@chakra-ui/react';
-
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogOverlay,
 } from '@chakra-ui/react';
 
 import {

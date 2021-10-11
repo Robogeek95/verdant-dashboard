@@ -87,7 +87,7 @@ export default function DashboardLayout({ children }) {
         </DrawerContent>
       </Drawer>
 
-      {/* mobilenav */}
+      {/* mobile nav */}
       <MobileNav onOpen={onOpen} user={userInfo?.user} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
