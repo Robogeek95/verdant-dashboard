@@ -5,6 +5,7 @@ import {
   loginReducer,
   requestForgotPasswordReducer,
 } from './reducers/authReducer';
+import { ordersReducer } from './reducers/ordersReducer';
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
@@ -13,6 +14,7 @@ const userInfoFromStorage = localStorage.getItem('userInfo')
 const reducer = combineReducers({
   login: loginReducer,
   requestForgotPassword: requestForgotPasswordReducer,
+  orders: ordersReducer,
 });
 
 const initialState = {

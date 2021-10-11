@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/button';
 import { Image } from '@chakra-ui/image';
 import { Box, Flex, Grid, Text } from '@chakra-ui/layout';
 import { Select } from '@chakra-ui/select';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductsDataTable from './ProductsDataTable';
 import {
   FiCircle,
@@ -10,267 +10,16 @@ import {
   FiRefreshCw,
   FiShoppingCart,
 } from 'react-icons/fi';
+import { useDispatch, useSelector } from 'react-redux';
+import { getOrders } from '../redux/actions/ordersActions';
+import { useToast } from '@chakra-ui/toast';
 
-const orders = [
-  {
-    beneficary: {
-      address: 'Great Gbenga',
-      account_number: null,
-      bank_code: null,
-      country: 'GH',
-      phone: '+233540470350',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Great Gbenga',
-    },
-    state: null,
-    quantity: 2,
-    amount: 470,
-    image: null,
-    meta: null,
-    createdAt: '2021-09-27T01:42:58.666Z',
-    user: '61511c2c92d412c8397687e7',
-    ref: 'x9CZNYAHCxWR1F4WZers6',
-    product_ref: 'T8SBBhGY4kt3Ndv8uL6GJ',
-    name: 'Double Bull Rice (50KG)',
-    id: '615124fba911c6001666e011',
-  },
-  {
-    beneficary: {
-      address: 'Great Gbenga',
-      account_number: null,
-      bank_code: null,
-      country: 'GH',
-      phone: '+233540470350',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Great Gbenga',
-    },
-    state: null,
-    quantity: 2,
-    amount: 470,
-    image: null,
-    meta: null,
-    createdAt: '2021-09-27T02:00:35.886Z',
-    user: '61511c2c92d412c8397687e7',
-    ref: 'Na9I9tWwwOaDvXPiuKp__',
-    product_ref: 'T8SBBhGY4kt3Ndv8uL6GJ',
-    name: 'Double Bull Rice (50KG)',
-    id: '6151264c656a2200160eb6e8',
-  },
-  {
-    beneficary: {
-      address: 'Great Gbenga',
-      account_number: null,
-      bank_code: null,
-      country: 'GH',
-      phone: '+233540470350',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Great Gbenga',
-    },
-    state: null,
-    quantity: 2,
-    amount: 470,
-    image: null,
-    meta: null,
-    createdAt: '2021-09-27T02:04:11.482Z',
-    user: '61511c2c92d412c8397687e7',
-    ref: 'x_1_1zWdIcbww7r7sfq-j',
-    product_ref: 'T8SBBhGY4kt3Ndv8uL6GJ',
-    name: 'Double Bull Rice (50KG)',
-    id: '615126f066d00500169ce0aa',
-  },
-  {
-    beneficary: {
-      address: 'Great Gbenga',
-      account_number: null,
-      bank_code: null,
-      country: 'GH',
-      phone: '+233540470350',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Great Gbenga',
-    },
-    state: null,
-    quantity: 2,
-    amount: 470,
-    image: null,
-    meta: null,
-    createdAt: '2021-09-27T02:20:41.396Z',
-    user: '61511c2c92d412c8397687e7',
-    ref: 'rbO0GN7prv6jcj8SCN6jE',
-    product_ref: 'T8SBBhGY4kt3Ndv8uL6GJ',
-    name: 'Double Bull Rice (50KG)',
-    id: '61512acba6d4ab0016561d6e',
-  },
-  {
-    beneficary: {
-      address: 'Yusuf Taiwo assan',
-      account_number: null,
-      bank_code: null,
-      country: 'NG',
-      phone: '+2335ss470350',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Yusuf Taiwo assan',
-    },
-    state: null,
-    quantity: 20,
-    amount: 4700,
-    image: null,
-    meta: null,
-    createdAt: '2021-09-27T02:27:26.381Z',
-    user: '61511c2c92d412c8397687e7',
-    ref: 'aVMINxAp0HW_ln7BaJRFv',
-    product_ref: 'T8SBBhGY4kt3Ndv8uL6GJ',
-    name: 'Double Bull Rice (50KG)',
-    id: '61512e19a1e90c00168913cc',
-  },
-  {
-    beneficary: {
-      address: 'Yusuf Taiwo assan',
-      account_number: null,
-      bank_code: null,
-      country: 'NG',
-      phone: '+2335ss470350',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Yusuf Taiwo assan',
-    },
-    state: null,
-    quantity: 10,
-    amount: 2350,
-    image: null,
-    meta: null,
-    createdAt: '2021-09-27T02:27:26.381Z',
-    user: '61511c2c92d412c8397687e7',
-    ref: 'cI3ydB3M46zIcNxQmaV-u',
-    product_ref: 'T8SBBhGY4kt3Ndv8uL6GJ',
-    name: 'Double Bull Rice (50KG)',
-    id: '61512e19a1e90c00168913cd',
-  },
-  {
-    beneficary: {
-      address: 'Azeez Lukman',
-      account_number: null,
-      bank_code: null,
-      country: 'Nigeria',
-      phone: '07010856052',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Azeez Lukman',
-    },
-    state: null,
-    quantity: 1,
-    amount: 18,
-    image: null,
-    meta: null,
-    createdAt: '2021-10-01T10:44:20.830Z',
-    user: '614c4e4c714d5bdd740ec771',
-    ref: '96LZNktaiANRAhUmIfdZm',
-    product_ref: 'z_IyRbQgi2khjM8zsQh9f',
-    name: 'Tomato King Rice(25KG)',
-    id: '61570c9be183420016c1af23',
-  },
-  {
-    beneficary: {
-      address: 'Gbenga Joseph',
-      account_number: null,
-      bank_code: null,
-      country: 'Nigeria',
-      phone: '+2347017808188',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Gbenga Joseph',
-    },
-    state: null,
-    quantity: 3,
-    amount: 70500,
-    image: null,
-    meta: null,
-    createdAt: '2021-10-01T10:44:20.830Z',
-    user: '614c4e4c714d5bdd740ec771',
-    ref: 'hPSkIRAKRsx49nbP_WznA',
-    product_ref: 'T8SBBhGY4kt3Ndv8uL6GJ',
-    name: 'Double Bull Rice (50KG)',
-    id: '61583d6be183420016c1afb7',
-  },
-  {
-    beneficary: {
-      address: 'Gbenga Joseph',
-      account_number: null,
-      bank_code: null,
-      country: 'Nigeria',
-      phone: '+2347017808188',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Gbenga Joseph',
-    },
-    state: null,
-    quantity: 1,
-    amount: 24500,
-    image: null,
-    meta: null,
-    createdAt: '2021-10-01T10:44:20.830Z',
-    user: '614c4e4c714d5bdd740ec771',
-    ref: 'VGlcKDrrA6uXAxWSXTaBJ',
-    product_ref: 'ihRamcODzA4iyJJqtplxa',
-    name: 'Royal Stallion Rice (50KG)',
-    id: '61583d6be183420016c1afb8',
-  },
-  {
-    beneficary: {
-      address: 'Segun',
-      account_number: null,
-      bank_code: null,
-      country: 'NG',
-      phone: '080350775',
-      zip_code: null,
-      currency_code: null,
-      transaction_ref: null,
-      name: 'Segun',
-    },
-    state: null,
-    quantity: 1,
-    amount: 18,
-    image: null,
-    meta: null,
-    createdAt: '2021-10-06T11:22:53.819Z',
-    user: '614c9a81171e20001693b95f',
-    ref: 't7n36YdTOWSAkazRBqW2R',
-    product_ref: 'z_IyRbQgi2khjM8zsQh9f',
-    name: 'Tomato King Rice(25KG)',
-    id: '615e8b54a3bd280016d4ca4d',
-  },
-];
-
-const topSellingProducts = [
-  {
-    name: 'CornFlakes',
-    amount: 1000,
-    image: '/product.png',
-  },
-  {
-    name: 'CornFlakes',
-    amount: 1000,
-    image: '/product.png',
-  },
-  {
-    name: 'CornFlakes',
-    amount: 1000,
-    image: '/product.png',
-  },
-];
+import {
+  Skeleton,
+  Stack,
+  SkeletonCircle,
+  SkeletonText,
+} from '@chakra-ui/react';
 
 function Product({ data }) {
   const { name, amount, image } = data;
@@ -290,13 +39,53 @@ function Product({ data }) {
 }
 
 export default function BaseDashBoard() {
+  const dispatch = useDispatch();
+  const toast = useToast();
+
+  const orderState = useSelector(state => state.orders);
+  const { loading, error, ordersData } = orderState;
+
+  const [topSellingProducts, setTopSellingProducts] = useState([]);
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
+  function getProducts() {
+    dispatch(getOrders());
+  }
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: 'We could not fetch orders.',
+        description: error,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  }, [error, toast]);
+
+  useEffect(() => {
+    if (ordersData && ordersData.length > 0) {
+      setTopSellingProducts(ordersData.splice(0, 4));
+    }
+  }, [ordersData]);
+
   return (
     <Box>
       <Flex justifyContent="space-between" align="center">
         <Text fontSize="2xl" fontWeight="bold">
           Overview
         </Text>
-        <Button color="brand.primary" leftIcon={<FiRefreshCw />}>
+        <Button
+          color="brand.primary"
+          isLoading={loading}
+          leftIcon={<FiRefreshCw />}
+          onClick={getProducts}
+        >
           Refresh
         </Button>
       </Flex>
@@ -311,31 +100,45 @@ export default function BaseDashBoard() {
         py={'35px'}
         gridGap="10"
       >
-        <Flex
-          borderRight="1px solid"
-          borderColor="blue.300"
-          alignItems="center"
-          gridGap="5"
-        >
-          <Flex
-            alignItems="center"
-            justify="center"
-            fontSize="3xl"
-            color="brand.secondary"
-            borderRadius="lg"
-            bg="#FFDD89"
-            p="4"
-          >
-            <FiShoppingCart />
-          </Flex>
+        {!loading && ordersData && ordersData.length > 0 ? (
+          <>
+            <Flex
+              borderRight="1px solid"
+              borderColor="blue.300"
+              alignItems="center"
+              gridGap="5"
+            >
+              <Flex
+                alignItems="center"
+                justify="center"
+                fontSize="3xl"
+                color="brand.secondary"
+                borderRadius="lg"
+                bg="#FFDD89"
+                p="4"
+              >
+                <FiShoppingCart />
+              </Flex>
 
-          <Box>
-            <Text fontSize="lg">Total Orders</Text>
-            <Text fontSize="md" fontWeight="bold">
-              12,050
-            </Text>
-          </Box>
-        </Flex>
+              <Box>
+                <Text fontSize="lg">Total Orders</Text>
+                <Text fontSize="md" fontWeight="bold">
+                  {ordersData.length}
+                </Text>
+              </Box>
+            </Flex>
+          </>
+        ) : (
+          <>
+            <Flex alignItems="center" gridGap="5">
+              <Skeleton height="60px" width="60px" borderRadius="lg" />
+
+              <Box>
+                <SkeletonText noOfLines={2} width="80px" />
+              </Box>
+            </Flex>
+          </>
+        )}
 
         <Flex
           borderRight="1px solid"
@@ -441,8 +244,10 @@ export default function BaseDashBoard() {
             </Select>
           </Flex>
 
-          <Flex justifyContent="space-around" alignItems="center">
-            <Box></Box>
+          <Flex justifyContent="space-around" alignItems="center" pt="10">
+            <Box>
+              <SkeletonCircle size="260" />
+            </Box>
 
             <Box mt="6" justifySelf="right">
               <Flex mt="3" alignItems="center">
@@ -489,10 +294,16 @@ export default function BaseDashBoard() {
             </Select>
           </Flex>
 
-          <Grid templateColumns="repeat(2, 1fr)" mt="5">
-            {topSellingProducts.map(product => (
-              <Product data={product} />
-            ))}
+          <Grid templateColumns="repeat(2, 1fr)" mt="5" gridGap="5">
+            {!loading && ordersData && ordersData.length >= 0 ? (
+              topSellingProducts.map(product => <Product data={product} />)
+            ) : (
+              <>
+                <Skeleton height="135px" borderRadius="md" />
+                <Skeleton height="135px" borderRadius="md" />
+                <Skeleton height="135px" borderRadius="md" />
+              </>
+            )}
           </Grid>
         </Box>
       </Grid>
@@ -516,13 +327,24 @@ export default function BaseDashBoard() {
             _hover={{
               bg: 'brand.secondary',
             }}
+            disabled={loading}
           >
             View all
           </Button>
         </Flex>
 
         <Box mt="5">
-          <ProductsDataTable data={orders.slice(0, 7)} />
+          {!loading && ordersData && ordersData.length >= 0 ? (
+            <ProductsDataTable data={ordersData?.slice(0, 7)} />
+          ) : (
+            <Stack spacing={5}>
+              <Skeleton height="35px" borderRadius="md" />
+              <Skeleton height="35px" borderRadius="md" />
+              <Skeleton height="35px" borderRadius="md" />
+              <Skeleton height="35px" borderRadius="md" />
+              <Skeleton height="35px" borderRadius="md" />
+            </Stack>
+          )}
         </Box>
       </Box>
     </Box>

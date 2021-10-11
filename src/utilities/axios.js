@@ -4,6 +4,7 @@ export const base_api_url = 'https://verdant-store.herokuapp.com';
 function getToken() {
   let token = '';
   let userInfo = JSON.parse(localStorage.getItem('userInfo'));
+  console.log(userInfo)
 
   if (userInfo) {
     token = userInfo?.token;
