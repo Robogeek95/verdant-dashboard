@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import { Button, IconButton } from '@chakra-ui/button';
 import { FiCheckCircle, FiMinus, FiMoreVertical, FiPlus } from 'react-icons/fi';
 
@@ -33,6 +32,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
+import DataTable from 'react-data-table-component';
 
 export default function UsersDataTable({ data = [] }) {
   // product drawer
@@ -77,54 +77,65 @@ export default function UsersDataTable({ data = [] }) {
 
   const onCloseDeleteProduct = () => setIsDeletedOpen(false);
 
+  const columns = [
+    {
+      name: 'Full name',
+      selector: row => row.name,
+      sortable: true,
+    },
+    {
+      name: 'Email Address',
+      selector: row => row.email,
+      sortable: true,
+    },
+    {
+      name: 'Billing Address',
+      selector: row => row.address,
+      sortable: true,
+    },
+    {
+      name: 'Phone Number',
+      selector: row => row.phone,
+      sortable: true,
+    },
+    {
+      name: 'Status',
+      // selector: row => row.year,
+      cell: (row, index) => formatStateBtn(row.state || 'pending'),
+      sortable: true,
+    },
+    {
+      name: 'Status',
+      // selector: row => row.year,
+      cell: (row, index) => (
+        <Popover w="150px">
+          <PopoverTrigger>
+            <IconButton variant="ghost" icon={<FiMoreVertical />} />
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent>
+              <PopoverBody>
+                <Stack gap={3}>
+                  <Button
+                    onClick={() => handleView(row)}
+                    colorScheme="blue"
+                    variant="ghost"
+                  >
+                    View
+                  </Button>
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+      ),
+      sortable: true,
+    },
+  ];
 
   return (
     <>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Full name</Th>
-            <Th>Email Address</Th>
-            <Th>Billing Address</Th>
-            <Th>Phone Number</Th>
-            <Th>Status</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map(user => (
-            <Tr>
-              <Td>{user.name}</Td>
-              <Td>{user.email}</Td>
-              <Td>{user.address}</Td>
-              <Td>{user.phone}</Td>
-              <Td>{formatStateBtn(user.state)}</Td>
-              <Td>
-                <Popover w="150px">
-                  <PopoverTrigger>
-                    <IconButton variant="ghost" icon={<FiMoreVertical />} />
-                  </PopoverTrigger>
-                  <Portal>
-                    <PopoverContent>
-                      <PopoverBody>
-                        <Stack gap={3}>
-                          <Button
-                            onClick={() => handleView(user)}
-                            colorScheme="blue"
-                            variant="ghost"
-                          >
-                            View
-                          </Button>
-                        </Stack>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Portal>
-                </Popover>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      <DataTable noTableHead columns={columns} data={data} pagination />
 
       <Drawer isOpen={isProductOpen} placement="right" onClose={onCloseProduct}>
         <DrawerOverlay />
