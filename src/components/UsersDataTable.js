@@ -135,7 +135,7 @@ export default function UsersDataTable({ data = [] }) {
 
   return (
     <>
-      <DataTable noTableHead columns={columns} data={data} pagination />
+      <DataTable columns={columns} data={data} pagination />
 
       <Drawer isOpen={isProductOpen} placement="right" onClose={onCloseProduct}>
         <DrawerOverlay />

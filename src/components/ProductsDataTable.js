@@ -42,6 +42,7 @@ import {
   ModalBody,
   ModalCloseButton,
 } from '@chakra-ui/react';
+import DataTable from 'react-data-table-component';
 
 export default function ProductsDataTable({ data }) {
   // alert dialog
@@ -122,60 +123,72 @@ export default function ProductsDataTable({ data }) {
     setActiveOrder({});
   }
 
+  const columns = [
+    {
+      name: 'Order ID',
+      selector: row => row.id,
+      sortable: true,
+    },
+    {
+      name: 'Name',
+      selector: row => row.name,
+      sortable: true,
+    },
+    {
+      name: 'Order date',
+      selector: row => row.createdAt,
+      sortable: true,
+    },
+    {
+      name: 'No of items',
+      selector: row => row.quantity,
+      sortable: true,
+    },
+    {
+      name: 'Order status',
+      // selector: row => row.year,
+      cell: (row, index) => formatStateBtn(row.state || 'pending'),
+      sortable: true,
+    },
+    {
+      name: '',
+      // selector: row => row.year,
+      cell: (row, index) => (
+        <Popover w="150px">
+          <PopoverTrigger>
+            <IconButton variant="ghost" icon={<FiMoreVertical />} />
+          </PopoverTrigger>
+          <Portal>
+            <PopoverContent>
+              <PopoverBody>
+                <Stack gap={3}>
+                  <Button
+                    onClick={() => handleView(row)}
+                    colorScheme="blue"
+                    variant="ghost"
+                  >
+                    View
+                  </Button>
+                  <Button
+                    onClick={() => handleRemove(row)}
+                    colorScheme="red"
+                    variant="ghost"
+                  >
+                    Remove
+                  </Button>
+                </Stack>
+              </PopoverBody>
+            </PopoverContent>
+          </Portal>
+        </Popover>
+      ),
+      sortable: true,
+    },
+  ];
+
   return (
     <>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Order ID</Th>
-            <Th>Name</Th>
-            <Th>Order date</Th>
-            <Th>No of items</Th>
-            <Th>Order status</Th>
-            <Th></Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map(order => (
-            <Tr>
-              <Td>{order.id}</Td>
-              <Td>{order.name}</Td>
-              <Td>{order.createdAt}</Td>
-              <Td>{order.quantity}</Td>
-              <Td>{formatStateBtn(order.state || 'pending')}</Td>
-              <Td>
-                <Popover w="150px">
-                  <PopoverTrigger>
-                    <IconButton variant="ghost" icon={<FiMoreVertical />} />
-                  </PopoverTrigger>
-                  <Portal>
-                    <PopoverContent>
-                      <PopoverBody>
-                        <Stack gap={3}>
-                          <Button
-                            onClick={() => handleView(order)}
-                            colorScheme="blue"
-                            variant="ghost"
-                          >
-                            View
-                          </Button>
-                          <Button
-                            onClick={() => handleRemove(order)}
-                            colorScheme="red"
-                            variant="ghost"
-                          >
-                            Remove
-                          </Button>
-                        </Stack>
-                      </PopoverBody>
-                    </PopoverContent>
-                  </Portal>
-                </Popover>
-              </Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      <DataTable columns={columns} data={data} pagination />
 
       <AlertDialog
         isOpen={isOpen}
@@ -225,16 +238,23 @@ export default function ProductsDataTable({ data }) {
 
           <DrawerBody>
             <Box>
-              <Flex justifyContent="space-between">
-                <Text>OrderId</Text>
+              <Stack spacing="3">
+                <Text fontSize="md" fontWeight="light" color="gray.600">
+                  OrderId
+                </Text>
 
                 <Text>{activeOrder.id}</Text>
-              </Flex>
+              </Stack>
+
+              <Divider my={5} />
+
               <Box mt={3}>
-                <Text fontWeight="bold">Labels</Text>
+                <Text fontSize="md" fontWeight="light" color="gray.600">
+                  Labels
+                </Text>
 
                 {/* labels */}
-                <Stack direction="row" mb={4} alignItems="center">
+                <Stack direction="row" my={4} alignItems="center">
                   <IconButton
                     onClick={handleToggleLabel}
                     icon={isLabelOpen ? <FiMinus /> : <FiPlus />}
@@ -268,8 +288,12 @@ export default function ProductsDataTable({ data }) {
 
               <Box>
                 <Flex justifyContent="space-between" mb="4">
-                  <Text fontSize="lg">Product Details</Text>
-                  <Text fontSize="lg">Price</Text>
+                  <Text fontSize="md" fontWeight="light" color="gray.600">
+                    Product Details
+                  </Text>
+                  <Text fontSize="md" fontWeight="light" color="gray.600">
+                    Price
+                  </Text>
                 </Flex>
 
                 <Flex
@@ -292,25 +316,33 @@ export default function ProductsDataTable({ data }) {
 
               <Divider my={5} />
               <Flex justifyContent="space-between">
-                <Text>Quantity:</Text>
+                <Text fontSize="md" fontWeight="light" color="gray.600">
+                  Quantity:
+                </Text>
                 <Text>{activeOrder.quantity}</Text>
               </Flex>
 
               <Divider my={5} />
               <Flex justifyContent="space-between">
-                <Text>Sum total:</Text>
+                <Text fontSize="md" fontWeight="light" color="gray.600">
+                  Sum total:
+                </Text>
                 <Text>₦{activeOrder.quantity * activeOrder.amount}</Text>
               </Flex>
 
               <Divider my={5} />
               <Flex justifyContent="space-between">
-                <Text>Delivery:</Text>
+                <Text fontSize="md" fontWeight="light" color="gray.600">
+                  Delivery:
+                </Text>
                 <Text>₦{activeOrder.delivery || 0}</Text>
               </Flex>
 
               <Divider my={5} />
               <Flex justifyContent="space-between">
-                <Text>TOTAL:</Text>
+                <Text fontSize="md" fontWeight="light" color="gray.600">
+                  Total:
+                </Text>
                 <Text>
                   ₦
                   {activeOrder.quantity * activeOrder.amount +
