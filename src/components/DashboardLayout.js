@@ -55,8 +55,8 @@ const LinkItems = {
 export default function DashboardLayout({ children }) {
   const [active, setActive] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const userLogin = useSelector(state => state.login);
-  const { userInfo } = userLogin;
+  const userState = useSelector(state => state.user);
+  const { userInfo } = userState;
   const location = useLocation();
 
   useEffect(() => {
@@ -79,16 +79,12 @@ export default function DashboardLayout({ children }) {
         size="full"
       >
         <DrawerContent>
-          <SidebarContent
-            active={active}
-            user={userInfo?.user}
-            onClose={onClose}
-          />
+          <SidebarContent active={active} user={userInfo} onClose={onClose} />
         </DrawerContent>
       </Drawer>
 
       {/* mobile nav */}
-      <MobileNav onOpen={onOpen} user={userInfo?.user} />
+      <MobileNav onOpen={onOpen} user={userInfo} />
       <Box ml={{ base: 0, md: 60 }} p="4">
         {children}
       </Box>

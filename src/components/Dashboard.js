@@ -4,6 +4,7 @@ import { Redirect, Route, Switch } from 'react-router';
 import BaseDashBoard from './BaseDashBoard';
 import DashboardLayout from './DashboardLayout';
 import OrdersDashboard from './OrdersDashboard';
+import SettingsDashboard from './SettingsDashboard';
 import UsersDashboard from './UsersDashboard';
 
 export default function Dashboard() {
@@ -33,7 +34,9 @@ export default function Dashboard() {
             <OrdersDashboard />
           </Route>
 
-          <Route path="/settings">settings</Route>
+          <Route path="/settings">
+            <SettingsDashboard />
+          </Route>
         </Switch>
       </DashboardLayout>
     </Box>

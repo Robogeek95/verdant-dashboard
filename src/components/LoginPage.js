@@ -24,10 +24,14 @@ export default function LoginPage({ history }) {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const dispatch = useDispatch();
-  const userLogin = useSelector(state => state.login);
-  const { loading, error, userInfo, success } = userLogin;
   const toast = useToast();
+  const dispatch = useDispatch();
+  
+  const userLogin = useSelector(state => state.login);
+  const { loading, error, success } = userLogin;
+
+  const userState = useSelector(state => state.user);
+  const { userInfo } = userState;
 
   useEffect(() => {
     if (userInfo) {
@@ -38,7 +42,6 @@ export default function LoginPage({ history }) {
   function onSubmit(data) {
     const payload = {
       email: data.email,
-      id: data.id,
       password: data.password,
     };
 
@@ -115,20 +118,6 @@ export default function LoginPage({ history }) {
               {errors.email?.type === 'required' && (
                 <Text color="red.500" fontSize="xs" mt="2">
                   Email is required
-                </Text>
-              )}
-            </FormControl>
-
-            <FormControl id="staffId">
-              <FormLabel>Staff ID</FormLabel>
-              <Input
-                {...register('id', { required: true })}
-                type="text"
-                placeholder="12345"
-              />
-              {errors.id?.type === 'required' && (
-                <Text color="red.500" fontSize="xs" mt="2">
-                  Staff ID is required
                 </Text>
               )}
             </FormControl>

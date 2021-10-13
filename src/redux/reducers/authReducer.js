@@ -16,7 +16,6 @@ export const loginReducer = (state = {}, action) => {
       return {
         ...state,
         loading: false,
-        userInfo: action.payload,
         success: true,
       };
     case LOGIN_FAIL:

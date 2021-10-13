@@ -6,19 +6,23 @@ import {
   requestForgotPasswordReducer,
 } from './reducers/authReducer';
 import { ordersReducer } from './reducers/ordersReducer';
+import { userReducer } from './reducers/userReducer';
 
 const userInfoFromStorage = localStorage.getItem('userInfo')
   ? JSON.parse(localStorage.getItem('userInfo'))
   : null;
 
+console.log({ userInfoFromStorage });
+
 const reducer = combineReducers({
   login: loginReducer,
+  user: userReducer,
   requestForgotPassword: requestForgotPasswordReducer,
   orders: ordersReducer,
 });
 
 const initialState = {
-  login: { userInfo: userInfoFromStorage },
+  user: { userInfo: userInfoFromStorage },
 };
 
 const middleware = [thunk];

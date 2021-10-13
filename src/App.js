@@ -39,8 +39,8 @@ function App() {
 }
 
 function PrivateRoute({ children, ...rest }) {
-  const userLogin = useSelector(state => state.login);
-  const { userInfo } = userLogin;
+  const userState = useSelector(state => state.user);
+  const { userInfo } = userState;
 
   return (
     <Route
