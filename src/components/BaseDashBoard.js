@@ -48,11 +48,11 @@ export default function BaseDashBoard() {
   const [topSellingProducts, setTopSellingProducts] = useState([]);
 
   useEffect(() => {
-    getProducts();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    fetchOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  function getProducts() {
+  function fetchOrders() {
     dispatch(getOrders());
   }
 
@@ -85,7 +85,7 @@ export default function BaseDashBoard() {
           color="brand.primary"
           isLoading={loading}
           leftIcon={<FiRefreshCw />}
-          onClick={getProducts}
+          onClick={fetchOrders}
         >
           Refresh
         </Button>
@@ -224,7 +224,7 @@ export default function BaseDashBoard() {
         <Box
           bg="white"
           boxShadow="md"
-          px={["10px", null, '32px']}
+          px={['10px', null, '32px']}
           py={'20px'}
           borderRadius="lg"
         >

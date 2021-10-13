@@ -1,0 +1,47 @@
+[
+  {
+    "name": "Fin Taylor",
+    "email": "fin.taylor@gmail.com",
+    "address": "Ojodu, berger",
+    "phone": "+23410112324",
+    "state": "active",
+    "sex": "male",
+    "isAdmin": true
+  },
+  {
+    "name": "Fin Taylor",
+    "email": "fin.taylor@gmail.com",
+    "address": "Ojodu, berger",
+    "phone": "+23410112324",
+    "state": "active",
+    "sex": "female",
+    "isAdmin": false
+  },
+  {
+    "name": "Fin Taylor",
+    "email": "fin.taylor@gmail.com",
+    "address": "Ojodu, berger",
+    "phone": "+23410112324",
+    "state": "deactivated",
+    "sex": "male",
+    "isAdmin": true
+  },
+  {
+    "name": "Fin Taylor",
+    "email": "fin.taylor@gmail.com",
+    "address": "Ojodu, berger",
+    "phone": "+23410112324",
+    "state": "active",
+    "sex": "female",
+    "isAdmin": false
+  },
+  {
+    "name": "Fin Taylor",
+    "email": "fin.taylor@gmail.com",
+    "address": "Ojodu, berger",
+    "phone": "+23410112324",
+    "state": "deactivated",
+    "sex": "female",
+    "isAdmin": false
+  }
+]

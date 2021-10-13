@@ -3,53 +3,8 @@ import { Box, Divider, Stack, Text } from '@chakra-ui/layout';
 import { Select } from '@chakra-ui/select';
 import UsersDataTable from './UsersDataTable';
 
-const users = [
-  {
-    name: 'Fin Taylor',
-    email: 'fin.taylor@gmail.com',
-    address: 'Ojodu, berger',
-    phone: '+23410112324',
-    state: 'active',
-    sex: 'male',
-    isAdmin: true,
-  },
-  {
-    name: 'Fin Taylor',
-    email: 'fin.taylor@gmail.com',
-    address: 'Ojodu, berger',
-    phone: '+23410112324',
-    state: 'active',
-    sex: 'female',
-    isAdmin: false,
-  },
-  {
-    name: 'Fin Taylor',
-    email: 'fin.taylor@gmail.com',
-    address: 'Ojodu, berger',
-    phone: '+23410112324',
-    state: 'deactivated',
-    sex: 'male',
-    isAdmin: true,
-  },
-  {
-    name: 'Fin Taylor',
-    email: 'fin.taylor@gmail.com',
-    address: 'Ojodu, berger',
-    phone: '+23410112324',
-    state: 'active',
-    sex: 'female',
-    isAdmin: false,
-  },
-  {
-    name: 'Fin Taylor',
-    email: 'fin.taylor@gmail.com',
-    address: 'Ojodu, berger',
-    phone: '+23410112324',
-    state: 'deactivated',
-    sex: 'female',
-    isAdmin: false,
-  },
-];
+import users from '../utilities/mockData/users.json';
+import { Skeleton } from '@chakra-ui/skeleton';
 
 export default function UsersDashboard() {
   const [tab, setTab] = useState('customer');
@@ -135,7 +90,19 @@ export default function UsersDashboard() {
           <Divider mt="4" />
         </Box>
 
-        <Box p={10}>
+        <Box p="10">
+          {/* {!loading && usersData && usersData.length >= 0 ? (
+            <UsersDataTable data={filteredUsers} />
+          ) : (
+            <Stack spacing={5}>
+              <Skeleton height="35px" borderRadius="md" />
+              <Skeleton height="35px" borderRadius="md" />
+              <Skeleton height="35px" borderRadius="md" />
+              <Skeleton height="35px" borderRadius="md" />
+              <Skeleton height="35px" borderRadius="md" />
+            </Stack>
+          )} */}
+
           <UsersDataTable data={filteredUsers} />
         </Box>
       </Box>

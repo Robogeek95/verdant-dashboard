@@ -3,6 +3,7 @@ import React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import BaseDashBoard from './BaseDashBoard';
 import DashboardLayout from './DashboardLayout';
+import OrdersDashboard from './OrdersDashboard';
 import UsersDashboard from './UsersDashboard';
 
 export default function Dashboard() {
@@ -28,7 +29,9 @@ export default function Dashboard() {
 
           <Route path="/products">products</Route>
 
-          <Route path="/orders">orders</Route>
+          <Route path="/orders">
+            <OrdersDashboard />
+          </Route>
 
           <Route path="/settings">settings</Route>
         </Switch>
