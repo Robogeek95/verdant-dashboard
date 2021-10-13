@@ -1,5 +1,4 @@
 import React, { useRef, useState } from 'react';
-import { Table, Thead, Tbody, Tr, Th, Td } from '@chakra-ui/react';
 import { Button, IconButton } from '@chakra-ui/button';
 import { FiCheckCircle, FiMinus, FiMoreVertical, FiPlus } from 'react-icons/fi';
 

@@ -4,7 +4,6 @@ import { Select } from '@chakra-ui/select';
 import UsersDataTable from './UsersDataTable';
 
 import users from '../utilities/mockData/users.json';
-import { Skeleton } from '@chakra-ui/skeleton';
 
 export default function UsersDashboard() {
   const [tab, setTab] = useState('customer');

@@ -215,7 +215,7 @@ function ProfileForm({ formData }) {
   console.log({ formData });
 
   const userState = useSelector(state => state.user);
-  const { userInfo, error: detailError, updated, loading } = userState;
+  const { error: detailError, updated, loading } = userState;
 
   const {
     register,
