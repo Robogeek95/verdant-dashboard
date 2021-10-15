@@ -1,5 +1,6 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, IconButton } from '@chakra-ui/button';
+import { useFilePicker } from 'use-file-picker';
 import {
   FiCheckCircle,
   FiEdit,
@@ -12,6 +13,7 @@ import { Text, Box, Flex, Image } from '@chakra-ui/react';
 import { Divider } from '@chakra-ui/react';
 
 import { Stack, Grid } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 
 import {
   Drawer,
@@ -21,6 +23,9 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  FormControl,
+  FormLabel,
+  Input,
 } from '@chakra-ui/react';
 
 import {
@@ -40,8 +45,37 @@ import {
   ModalCloseButton,
 } from '@chakra-ui/react';
 import DataTable from 'react-data-table-component';
+import { useForm } from 'react-hook-form';
+import { useDispatch } from 'react-redux';
+import { deleteCategory } from '../redux/actions/categoriesActions';
+import { useSelector } from 'react-redux';
 
 export default function CategoryDataTable({ data }) {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+  const toast = useToast();
+  const dispatch = useDispatch();
+  const [openFileSelector, { filesContent, loading, clear }] = useFilePicker({
+    readAs: 'DataURL',
+    accept: 'image/*',
+  });
+
+  const categoriesState = useSelector(state => state.categories);
+  const { deleteError, deleted, deleting } = categoriesState;
+
+  function onSubmitEditCategory(data) {
+    const payload = {
+      email: data.email,
+      password: data.password,
+    };
+
+    console.log(payload);
+    // dispatch(login(payload));
+  }
+
   // alert dialog
   const [isOpen, setIsOpen] = useState(false);
   const onClose = () => {
@@ -85,28 +119,6 @@ export default function CategoryDataTable({ data }) {
 
   const [activeOrder, setActiveOrder] = useState({});
 
-  function formatStateBtn(state) {
-    if (state === 'delivered') {
-      return (
-        <Button colorScheme="yellow" variant="outline">
-          Delivered
-        </Button>
-      );
-    } else if (state === 'in-transit') {
-      return (
-        <Button colorScheme="blue" variant="outline">
-          In-transit
-        </Button>
-      );
-    } else {
-      return (
-        <Button colorScheme="green" variant="outline">
-          Pending
-        </Button>
-      );
-    }
-  }
-
   // label select
   const [isDeletedOpen, setIsDeletedOpen] = useState(false);
 
@@ -114,27 +126,32 @@ export default function CategoryDataTable({ data }) {
 
   function handleDelete() {
     // notify that delete is successful
-    setIsDeletedOpen(true);
+    dispatch(deleteCategory(activeOrder.id));
 
     // unset active order
     setActiveOrder({});
   }
 
+  useEffect(() => {
+    if (deleted) {
+      setIsDeletedOpen(true);
+    }
+  }, [deleted]);
+
   const columns = [
     {
       name: 'Category',
-      selector: row => row.quantity,
       sortable: true,
       cell: row => (
         <Stack direction="row" alignItems="center" my="4">
           <img src={row.image} width="80  " height="80  " alt={row.name} />
-          <Text fontSize="lg">{row.name}</Text>
+          <Text fontSize="lg">{row.category}</Text>
         </Stack>
       ),
     },
     {
       name: 'Total products',
-      cell: (row, index) => <Text>{row.productsCount || 'NA'}</Text>,
+      cell: (row, index) => <Text>{row.sub_categories.length || 'NA'}</Text>,
       sortable: true,
     },
     {
@@ -211,127 +228,120 @@ export default function CategoryDataTable({ data }) {
         </AlertDialogOverlay>
       </AlertDialog>
 
-      <Drawer isOpen={isProductOpen} placement="right" onClose={onCloseProduct}>
+      <Drawer
+        size="md"
+        isOpen={isProductOpen}
+        placement="right"
+        onClose={onCloseProduct}
+      >
         <DrawerOverlay />
         <DrawerContent>
           <DrawerCloseButton />
-          <DrawerHeader>Order Details</DrawerHeader>
+          <DrawerHeader>Edit Category</DrawerHeader>
 
           <DrawerBody>
             <Box>
-              <Stack spacing="3">
-                <Text fontSize="md" fontWeight="light" color="gray.600">
-                  OrderId
-                </Text>
+              <Stack spacing="1">
+                <Text fontSize="xl">Category Information</Text>
 
-                <Text>{activeOrder.id}</Text>
+                <Text fontSize="md" fontWeight="light" color="gray.600">
+                  Fill all details below
+                </Text>
               </Stack>
 
               <Divider my={5} />
 
-              <Box mt={3}>
-                <Text fontSize="md" fontWeight="light" color="gray.600">
-                  Labels
-                </Text>
-
-                {/* labels */}
-                <Stack direction="row" my={4} alignItems="center">
-                  <IconButton
-                    onClick={handleToggleLabel}
-                    icon={isLabelOpen ? <FiMinus /> : <FiPlus />}
-                  />
-
-                  {formatStateBtn('pending')}
-                </Stack>
-
-                {isLabelOpen && (
-                  <Grid
-                    gap={2}
-                    templateColumns="repeat(3, 1fr)"
-                    bg="gray.200"
-                    p="3"
-                    borderRadius="lg"
-                  >
-                    <Button colorScheme="green" variant="outline">
-                      Pending
-                    </Button>
-                    <Button colorScheme="blue" variant="outline">
-                      In-transit
-                    </Button>
-                    <Button colorScheme="yellow" variant="outline">
-                      Delivered
-                    </Button>
-                  </Grid>
-                )}
-              </Box>
-
-              <Divider my={5} />
-
               <Box>
-                <Flex justifyContent="space-between" mb="4">
-                  <Text fontSize="md" fontWeight="light" color="gray.600">
-                    Product Details
-                  </Text>
-                  <Text fontSize="md" fontWeight="light" color="gray.600">
-                    Price
-                  </Text>
-                </Flex>
-
-                <Flex
-                  mb="4"
-                  justifyContent="space-between"
-                  gridGap="5"
-                  alignItems="center"
+                <Stack
+                  as="form"
+                  onSubmit={handleSubmit(onSubmitEditCategory)}
+                  spacing={4}
                 >
-                  <Flex gridGap="5" alignItems="center">
-                    <Image
-                      src={activeOrder.image}
-                      h="70px"
-                      alt={activeOrder.name}
-                    />
-                    <Text>{activeOrder.name}</Text>
-                  </Flex>
-                  <Text>₦{activeOrder.amount}</Text>
-                </Flex>
+                  <Stack
+                    direction="row"
+                    justifyContent="space-between"
+                    spacing="5"
+                  >
+                    <FormControl id="email">
+                      <FormLabel>Category name</FormLabel>
+                      <Input
+                        {...register('name', { required: true })}
+                        type="text"
+                        placeholder="Enter category name"
+                      />
+                      {errors.email?.type === 'required' && (
+                        <Text color="red.500" fontSize="xs" mt="2">
+                          Category name is required
+                        </Text>
+                      )}
+                    </FormControl>
+
+                    <FormControl id="password">
+                      <FormLabel>Sub- Category</FormLabel>
+                      <Stack direction="row">
+                        <Input
+                          {...register('sub', {
+                            required: true,
+                            minLength: 6,
+                          })}
+                          type="number"
+                          placeholder="Enter subcategory to add"
+                        />
+
+                        <Box>
+                          <IconButton color="blue" icon={<FiPlus />} />
+                        </Box>
+                      </Stack>
+                    </FormControl>
+                  </Stack>
+
+                  <FormControl id="password">
+                    <FormLabel>Details - List of Sub - Category</FormLabel>
+                    <Grid
+                      templateColumns="repeat(2, 1fr)"
+                      gridGap="3"
+                      borderRadius="lg"
+                      p="5"
+                      borderWidth="1px"
+                      borderStyle="solid"
+                      borderColor="gray.200"
+                    >
+                      {activeOrder?.sub_categories?.map(sub => (
+                        <Stack direction="row" alignItems="center">
+                          <IconButton color="red" icon={<FiTrash2 />} />
+
+                          <Text color="gray.500">{sub.name}</Text>
+                        </Stack>
+                      ))}
+                    </Grid>
+                  </FormControl>
+
+                  <Box position="relative">
+                    <Flex top={5} right={5} position="absolute">
+                      <IconButton
+                        color="red"
+                        icon={<FiTrash2 />}
+                        onClick={() => clear()}
+                      />
+                    </Flex>
+                    <Box
+                      height="144px"
+                      borderRadius="lg"
+                      border="1px solid"
+                      borderStyle="dashed"
+                      bg={`url(${filesContent[0]?.content})`}
+                      backgroundPosition="center"
+                      cursor="pointer"
+                      bgSize="cover"
+                      _hover={{
+                        bg: 'gray.100',
+                      }}
+                      p={5}
+                      onClick={() => openFileSelector()}
+                    ></Box>
+                  </Box>
+                </Stack>
               </Box>
-
-              <Divider my={5} />
-              <Flex justifyContent="space-between">
-                <Text fontSize="md" fontWeight="light" color="gray.600">
-                  Quantity:
-                </Text>
-                <Text>{activeOrder.quantity}</Text>
-              </Flex>
-
-              <Divider my={5} />
-              <Flex justifyContent="space-between">
-                <Text fontSize="md" fontWeight="light" color="gray.600">
-                  Sum total:
-                </Text>
-                <Text>₦{activeOrder.quantity * activeOrder.amount}</Text>
-              </Flex>
-
-              <Divider my={5} />
-              <Flex justifyContent="space-between">
-                <Text fontSize="md" fontWeight="light" color="gray.600">
-                  Delivery:
-                </Text>
-                <Text>₦{activeOrder.delivery || 0}</Text>
-              </Flex>
-
-              <Divider my={5} />
-              <Flex justifyContent="space-between">
-                <Text fontSize="md" fontWeight="light" color="gray.600">
-                  Total:
-                </Text>
-                <Text>
-                  ₦
-                  {activeOrder.quantity * activeOrder.amount +
-                    (activeOrder.delivery || 0)}
-                </Text>
-              </Flex>
-
-              <Box></Box>
             </Box>
           </DrawerBody>
 
@@ -339,7 +349,7 @@ export default function CategoryDataTable({ data }) {
             <Button variant="outline" mr={3} onClick={onCloseProduct}>
               Close
             </Button>
-            <Button colorScheme="blue">Save</Button>
+            <Button colorScheme="blue">Save changes</Button>
           </DrawerFooter>
         </DrawerContent>
       </Drawer>

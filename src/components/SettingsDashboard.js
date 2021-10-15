@@ -12,12 +12,12 @@ import { useForm } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
 import { updateUserDetails } from '../redux/actions/userActions';
 import CategoryDataTable from './CategoryDataTable';
+import { getCategories } from '../redux/actions/categoriesActions';
+import { FiPlus } from 'react-icons/fi';
 
 function ProfileForm({ formData }) {
   const dispatch = useDispatch();
   const toast = useToast();
-
-  console.log({ formData });
 
   const userState = useSelector(state => state.user);
   const { error: detailError, updated, loading } = userState;
@@ -180,8 +180,12 @@ export default function SettingsDashboard() {
   const userState = useSelector(state => state.user);
   const { userInfo } = userState;
 
-  const orderState = useSelector(state => state.orders);
-  const { loading, error, ordersData } = orderState;
+  const categoriesState = useSelector(state => state.categories);
+  const {
+    error: categoriesError,
+    loading: loadingCategories,
+    data: categoriesData,
+  } = categoriesState;
 
   useEffect(() => {
     fetchOrders();
@@ -189,14 +193,14 @@ export default function SettingsDashboard() {
   }, []);
 
   function fetchOrders() {
-    dispatch(getOrders());
+    dispatch(getCategories());
   }
 
   useEffect(() => {
-    if (ordersData && ordersData.length > 0) {
-      setFilteredOrders(ordersData);
+    if (categoriesData && categoriesData.length > 0) {
+      setFilteredOrders(categoriesData);
     }
-  }, [ordersData, tab]);
+  }, [categoriesData, tab]);
 
   useEffect(() => {
     if (userInfo) {
@@ -210,28 +214,18 @@ export default function SettingsDashboard() {
     }
   }, [userInfo]);
 
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     setValue('name', userInfo?.name);
-  //     setValue('email', userInfo?.email);
-  //     setValue('phone', userInfo?.phone);
-  //     setValue('designation', userInfo?.designation);
-  //     setValue('sex', userInfo?.sex);
-  //   }
-  // }, [setValue, userInfo]);
-
   useEffect(() => {
-    if (error) {
+    if (categoriesError) {
       toast({
         title: 'We could not fetch orders.',
-        description: error,
+        description: categoriesError,
         status: 'error',
         duration: 5000,
         isClosable: true,
         position: 'top',
       });
     }
-  }, [error, toast]);
+  }, [categoriesError, toast]);
 
   return (
     <Box p={5}>
@@ -296,6 +290,16 @@ export default function SettingsDashboard() {
                 />
               </Stack>
             </Stack>
+
+            <Button
+              colorScheme="blue"
+              bg="blue.100"
+              color="blue.500"
+              _hover={{ color: 'blue.800' }}
+            >
+              <FiPlus />
+              Add new category
+            </Button>
           </Stack>
 
           <Divider mt="4" />
@@ -346,7 +350,9 @@ export default function SettingsDashboard() {
         )}
         {tab === 'category' && (
           <Box p="10" overflow="auto">
-            {!loading && ordersData && ordersData.length >= 0 ? (
+            {!loadingCategories &&
+            categoriesData &&
+            categoriesData.length >= 0 ? (
               <CategoryDataTable data={filteredOrders} />
             ) : (
               <Stack spacing={5}>
