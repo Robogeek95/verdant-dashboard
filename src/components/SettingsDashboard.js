@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Divider, Grid, GridItem, Stack, Text } from '@chakra-ui/layout';
 import { Select } from '@chakra-ui/select';
-import ProductsDataTable from './ProductsDataTable';
 import { getOrders } from '../redux/actions/ordersActions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useToast } from '@chakra-ui/toast';
@@ -12,201 +11,7 @@ import { Input } from '@chakra-ui/input';
 import { useForm } from 'react-hook-form';
 import { Button } from '@chakra-ui/button';
 import { updateUserDetails } from '../redux/actions/userActions';
-
-export default function SettingsDashboard() {
-  const toast = useToast();
-  const dispatch = useDispatch();
-
-  const [formData, setFormData] = useState({});
-  const [tab, setTab] = useState('profile');
-  const [filteredOrders, setFilteredOrders] = useState([]);
-
-  const userState = useSelector(state => state.user);
-  const { userInfo } = userState;
-
-  const orderState = useSelector(state => state.orders);
-  const { loading, error, ordersData } = orderState;
-
-  useEffect(() => {
-    fetchOrders();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  function fetchOrders() {
-    dispatch(getOrders());
-  }
-
-  useEffect(() => {
-    if (ordersData && ordersData.length > 0) {
-      setFilteredOrders(ordersData);
-    }
-  }, [ordersData, tab]);
-
-  useEffect(() => {
-    if (userInfo) {
-      setFormData({
-        name: userInfo?.name,
-        email: userInfo?.email,
-        phone: userInfo?.phone,
-        designation: userInfo?.designation,
-        sex: userInfo?.sex,
-      });
-    }
-  }, [userInfo]);
-
-  // useEffect(() => {
-  //   if (userInfo) {
-  //     setValue('name', userInfo?.name);
-  //     setValue('email', userInfo?.email);
-  //     setValue('phone', userInfo?.phone);
-  //     setValue('designation', userInfo?.designation);
-  //     setValue('sex', userInfo?.sex);
-  //   }
-  // }, [setValue, userInfo]);
-
-  useEffect(() => {
-    if (error) {
-      toast({
-        title: 'We could not fetch orders.',
-        description: error,
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-        position: 'top',
-      });
-    }
-  }, [error, toast]);
-
-  return (
-    <Box p={5}>
-      <Text fontSize="2xl" fontWeight="bold" p={5}>
-        Settings
-      </Text>
-
-      <Box
-        w="100%"
-        h="100%"
-        minH="200px"
-        bg="white"
-        boxShadow="md"
-        borderRadius="lg"
-      >
-        <Box>
-          <Stack
-            position="relative"
-            direction="row"
-            px={20}
-            pt={10}
-            justifyContent="space-between"
-          >
-            <Stack direction="row" spacing="10">
-              <Stack
-                onClick={() => setTab('profile')}
-                cursor="pointer"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Text fontSize="lg" color="gray.500">
-                  Profile
-                </Text>
-
-                <Box
-                  w="120px"
-                  position="absolute"
-                  bg={tab === 'profile' ? 'brand.primary' : 'transparent'}
-                  h="3px"
-                  borderRadius="xl"
-                  bottom="-4"
-                />
-              </Stack>
-
-              <Stack
-                onClick={() => setTab('category')}
-                cursor="pointer"
-                justifyContent="center"
-                alignItems="center"
-              >
-                <Text fontSize="lg" color="gray.500">
-                  Category
-                </Text>
-
-                <Box
-                  w="120px"
-                  position="absolute"
-                  bg={tab === 'category' ? 'brand.primary' : 'transparent'}
-                  h="3px"
-                  borderRadius="xl"
-                  bottom="-4"
-                />
-              </Stack>
-            </Stack>
-          </Stack>
-
-          <Divider mt="4" />
-        </Box>
-        {tab === 'profile' && Object.keys(formData).length >= 1 && (
-        <>
-          <Grid gridGap="20" templateColumns="repeat(5, 1fr)" p={20}>
-            <GridItem colSpan="2">
-              <Stack
-                justifyContent="center"
-                alignItems="center"
-                bg="gray.200"
-                borderRadius="lg"
-                p={10}
-                spacing={6}
-              >
-                <Avatar size="2xl" />
-
-                <Box textAlign="center">
-                  <Text fontSize="2xl">{userInfo?.name}</Text>
-                  <Text fontSize="lg" color="brand.primary">
-                    {userInfo?.role || 'Administrator'}
-                  </Text>
-                </Box>
-
-                <Stack
-                  w={'100%'}
-                  direction="row"
-                  justifyContent="space-between"
-                >
-                  <Stack>
-                    <Text fontSize="md" color="gray.600">
-                      Designation
-                    </Text>
-                    <Text fontSize="lg">
-                      {userInfo?.designation || 'Product manager'}
-                    </Text>
-                  </Stack>
-                </Stack>
-              </Stack>
-            </GridItem>
-
-            <GridItem colSpan="3">
-              <ProfileForm formData={formData} />
-            </GridItem>
-          </Grid>
-        </>
-        )}
-        {tab === 'category' && (
-          <Box p="10" overflow="auto">
-            {!loading && ordersData && ordersData.length >= 0 ? (
-              <ProductsDataTable data={filteredOrders} />
-            ) : (
-              <Stack spacing={5}>
-                <Skeleton height="35px" borderRadius="md" />
-                <Skeleton height="35px" borderRadius="md" />
-                <Skeleton height="35px" borderRadius="md" />
-                <Skeleton height="35px" borderRadius="md" />
-                <Skeleton height="35px" borderRadius="md" />
-              </Stack>
-            )}
-          </Box>
-        )}
-      </Box>
-    </Box>
-  );
-}
+import CategoryDataTable from './CategoryDataTable';
 
 function ProfileForm({ formData }) {
   const dispatch = useDispatch();
@@ -361,5 +166,200 @@ function ProfileForm({ formData }) {
         </Button>
       </Stack>
     </Stack>
+  );
+}
+
+export default function SettingsDashboard() {
+  const toast = useToast();
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({});
+  const [tab, setTab] = useState('profile');
+  const [filteredOrders, setFilteredOrders] = useState([]);
+
+  const userState = useSelector(state => state.user);
+  const { userInfo } = userState;
+
+  const orderState = useSelector(state => state.orders);
+  const { loading, error, ordersData } = orderState;
+
+  useEffect(() => {
+    fetchOrders();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function fetchOrders() {
+    dispatch(getOrders());
+  }
+
+  useEffect(() => {
+    if (ordersData && ordersData.length > 0) {
+      setFilteredOrders(ordersData);
+    }
+  }, [ordersData, tab]);
+
+  useEffect(() => {
+    if (userInfo) {
+      setFormData({
+        name: userInfo?.name,
+        email: userInfo?.email,
+        phone: userInfo?.phone,
+        designation: userInfo?.designation,
+        sex: userInfo?.sex,
+      });
+    }
+  }, [userInfo]);
+
+  // useEffect(() => {
+  //   if (userInfo) {
+  //     setValue('name', userInfo?.name);
+  //     setValue('email', userInfo?.email);
+  //     setValue('phone', userInfo?.phone);
+  //     setValue('designation', userInfo?.designation);
+  //     setValue('sex', userInfo?.sex);
+  //   }
+  // }, [setValue, userInfo]);
+
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: 'We could not fetch orders.',
+        description: error,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top',
+      });
+    }
+  }, [error, toast]);
+
+  return (
+    <Box p={5}>
+      <Text fontSize="2xl" fontWeight="bold" p={5}>
+        Settings
+      </Text>
+
+      <Box
+        w="100%"
+        h="100%"
+        minH="200px"
+        bg="white"
+        boxShadow="md"
+        borderRadius="lg"
+      >
+        <Box>
+          <Stack
+            position="relative"
+            direction="row"
+            px={20}
+            pt={10}
+            justifyContent="space-between"
+          >
+            <Stack direction="row" spacing="10">
+              <Stack
+                onClick={() => setTab('profile')}
+                cursor="pointer"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Text fontSize="lg" color="gray.500">
+                  Profile
+                </Text>
+
+                <Box
+                  w="120px"
+                  position="absolute"
+                  bg={tab === 'profile' ? 'brand.primary' : 'transparent'}
+                  h="3px"
+                  borderRadius="xl"
+                  bottom="-4"
+                />
+              </Stack>
+
+              <Stack
+                onClick={() => setTab('category')}
+                cursor="pointer"
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Text fontSize="lg" color="gray.500">
+                  Category
+                </Text>
+
+                <Box
+                  w="120px"
+                  position="absolute"
+                  bg={tab === 'category' ? 'brand.primary' : 'transparent'}
+                  h="3px"
+                  borderRadius="xl"
+                  bottom="-4"
+                />
+              </Stack>
+            </Stack>
+          </Stack>
+
+          <Divider mt="4" />
+        </Box>
+        {tab === 'profile' && Object.keys(formData).length >= 1 && (
+          <>
+            <Grid gridGap="20" templateColumns="repeat(5, 1fr)" p={20}>
+              <GridItem colSpan="2">
+                <Stack
+                  justifyContent="center"
+                  alignItems="center"
+                  bg="gray.200"
+                  borderRadius="lg"
+                  p={10}
+                  spacing={6}
+                >
+                  <Avatar size="2xl" />
+
+                  <Box textAlign="center">
+                    <Text fontSize="2xl">{userInfo?.name}</Text>
+                    <Text fontSize="lg" color="brand.primary">
+                      {userInfo?.role || 'Administrator'}
+                    </Text>
+                  </Box>
+
+                  <Stack
+                    w={'100%'}
+                    direction="row"
+                    justifyContent="space-between"
+                  >
+                    <Stack>
+                      <Text fontSize="md" color="gray.600">
+                        Designation
+                      </Text>
+                      <Text fontSize="lg">
+                        {userInfo?.designation || 'Product manager'}
+                      </Text>
+                    </Stack>
+                  </Stack>
+                </Stack>
+              </GridItem>
+
+              <GridItem colSpan="3">
+                <ProfileForm formData={formData} />
+              </GridItem>
+            </Grid>
+          </>
+        )}
+        {tab === 'category' && (
+          <Box p="10" overflow="auto">
+            {!loading && ordersData && ordersData.length >= 0 ? (
+              <CategoryDataTable data={filteredOrders} />
+            ) : (
+              <Stack spacing={5}>
+                <Skeleton height="35px" borderRadius="md" />
+                <Skeleton height="35px" borderRadius="md" />
+                <Skeleton height="35px" borderRadius="md" />
+                <Skeleton height="35px" borderRadius="md" />
+                <Skeleton height="35px" borderRadius="md" />
+              </Stack>
+            )}
+          </Box>
+        )}
+      </Box>
+    </Box>
   );
 }
